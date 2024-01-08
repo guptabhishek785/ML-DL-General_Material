@@ -1,0 +1,124 @@
+Dataset Cleaning steps
+
+- Check the datatypes of each column. Change to appropriate ones: Examine the data types of each column in the dataset and adjust them if necessary to ensure they are suitable for analysis or modeling.
+- Check the statistics of numerical columns. Scale values if needed: Analyze the statistical summary of numerical columns to identify potential scaling requirements. Use techniques like Standard Scaling or Min-Max Scaling to normalize the values if needed.
+- Numerical values to categories - One Hot Encoding: Convert numerical values to categorical ones using techniques like One-Hot Encoding, especially when dealing with categorical variables.
+- Drop useless Columns: Remove irrelevant or redundant columns from the dataset that do not contribute meaningfully to the analysis or modeling process.
+- EDA (Exploratory Data Analysis): Conduct exploratory data analysis to gain insights into the dataset's distribution, relationships between variables, and other patterns. Visualization tools such as matplotlib or seaborn can be employed.
+- Check for imbalance in the data: Examine the distribution of classes in the target variable to identify data imbalances. Addressing imbalances may be necessary to avoid bias in machine learning models.
+- Handling Missing Values: Identify and address missing values by either removing rows, filling in missing values using appropriate strategies, or utilizing advanced imputation techniques.
+- Removing Duplicates: Identify and remove duplicate rows from the dataset to ensure data integrity and prevent skewed analysis or modeling results.
+- Outlier Detection and Removal: Identify and handle outliers in numerical columns using techniques like Z-score or Interquartile Range (IQR) to prevent them from impacting analysis or modeling.
+- Feature Scaling: Scale numerical features if necessary to ensure they are on a similar scale, preventing certain features from dominating others in certain algorithms.
+- Feature Engineering: Create new features if needed, involving the combination of existing features, extracting information from text or date columns, or generating interaction terms.
+- Date and Time Processing: Process date and time columns, converting them to appropriate formats or extracting relevant information (e.g., year, month, day).
+- Convert Categorical Data: Convert categorical variables into numerical format using methods like One-Hot Encoding, Label Encoding, or Ordinal Encoding.
+- Normalization: Normalize numerical features if necessary, scaling values between 0 and 1 to aid certain algorithms.
+- Correlation Analysis: Examine the correlation between features to identify highly correlated features that might introduce multicollinearity in statistical models.
+- Check for Data Imbalance: Examine the distribution of classes in the target variable to identify and address any imbalance, using techniques like oversampling, undersampling, or different evaluation metrics.
+- Encoding Ordinal Variables: Encode ordinal variables (categorical variables with a clear order) appropriately, preserving the ordinal relationship.
+- Handling Text Data: Preprocess text data by removing stopwords, stemming/lemmatizing, and converting it into a format suitable for natural language processing (NLP) tasks.
+- Save Cleaned Data: After performing all necessary cleaning steps, save the cleaned dataset for future use, avoiding the need to repeat the cleaning process.
+
+
+# Code
+
+
+import pandas as pd
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import SMOTE
+from sklearn.preprocessing import LabelEncoder
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# Load your dataset
+df = pd.read_csv('your_dataset.csv')
+
+# 1. Check the datatypes of each column. Change to appropriate ones
+print("Before:\n", df.dtypes)
+# Example: Convert 'Age' column to integer
+df['Age'] = df['Age'].astype(int)
+print("\nAfter:\n", df.dtypes)
+
+# 2. Check the statistics of numerical columns. Scale values if needed
+print("\nStatistics:\n", df.describe())
+# Example: Scale 'Salary' column using StandardScaler
+scaler = StandardScaler()
+df['Salary'] = scaler.fit_transform(df[['Salary']])
+print("\nAfter Scaling:\n", df.describe())
+
+# 3. Numerical values to categories - One Hot Encoding
+# Example: One-Hot Encode 'Gender' column
+df = pd.get_dummies(df, columns=['Gender'], prefix='Gender')
+
+# 4. Drop useless Columns
+# Example: Drop 'Unnamed: 0' column
+df.drop('Unnamed: 0', axis='columns', inplace=True)
+
+# 5. EDA (Exploratory Data Analysis)
+# Perform exploratory data analysis using visualization libraries like matplotlib or seaborn
+
+# 6. Check for imbalance in the data
+# Example: Check the balance of the 'Churn' column
+print("\nClass Distribution:\n", df['Churn'].value_counts())
+
+# 7. Handling Missing Values
+# Example: Fill missing values in 'Age' column with the median
+df['Age'].fillna(df['Age'].median(), inplace=True)
+
+# 8. Removing Duplicates
+# Example: Remove duplicate rows
+df.drop_duplicates(inplace=True)
+
+# 9. Outlier Detection and Removal
+# Example: Remove outliers in 'Income' using IQR
+Q1 = df['Income'].quantile(0.25)
+Q3 = df['Income'].quantile(0.75)
+IQR = Q3 - Q1
+df = df[~((df['Income'] < (Q1 - 1.5 * IQR)) | (df['Income'] > (Q3 + 1.5 * IQR)))]
+
+# 10. Feature Scaling
+# Example: Min-Max scaling for 'Age' column
+df['Age'] = (df['Age'] - df['Age'].min()) / (df['Age'].max() - df['Age'].min())
+
+# 11. Feature Engineering
+# Example: Create a new feature 'Age_squared'
+df['Age_squared'] = df['Age'] ** 2
+
+# 12. Date and Time Processing
+# Example: Convert 'Date' column to datetime
+df['Date'] = pd.to_datetime(df['Date'])
+# Extracting month from 'Date'
+df['Month'] = df['Date'].dt.month
+
+# 13. Convert Categorical Data
+# Example: Label Encoding for 'Category' column
+label_encoder = LabelEncoder()
+df['Category'] = label_encoder.fit_transform(df['Category'])
+
+# 14. Normalization
+# Example: Min-Max scaling for 'Income' column
+df['Income'] = (df['Income'] - df['Income'].min()) / (df['Income'].max() - df['Income'].min())
+
+# 15. Correlation Analysis
+# Example: Check correlation between features
+correlation_matrix = df.corr()
+
+# 16. Check for Data Imbalance
+# Example: Handle imbalance using SMOTE
+X = df.drop('Churn', axis=1)
+y = df['Churn']
+X_resampled, y_resampled = SMOTE().fit_resample(X, y)
+
+# 17. Encoding Ordinal Variables
+# Example: Ordinal encoding for 'Education' column
+education_mapping = {'High School': 1, 'Bachelor': 2, 'Master': 3, 'PhD': 4}
+df['Education'] = df['Education'].map(education_mapping)
+
+# 18. Handling Text Data
+# Example: Text processing using TF-IDF vectorizer for 'Text' column
+vectorizer = TfidfVectorizer()
+text_matrix = vectorizer.fit_transform(df['Text'])
+
+# 19. Save Cleaned Data
+df.to_csv('cleaned_dataset.csv', index=False)

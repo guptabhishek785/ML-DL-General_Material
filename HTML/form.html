@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <Hr>
+        <form action = "/action.php">
+            <h3>Login</h3>
+            <input type= "text" placeholder = "username">
+            <input type= "password" placeholder = "password">
+            <Hr>
+                <h3>Class</h3>
+            <!-- name = "stdrd": ensure that only one radio is pressed for elements with the same name-->
+            <label for = 'id1'>
+                <input type = "radio" value = "class X" name = "stdrd" id = "id1">class X
+            </label>
+
+            <label for = 'id2'>
+                <input type = "radio" value = "class XII" name = "stdrd" id = "id2">class XII
+            </label>
+
+            <Hr>
+            <H3> Select your subjects </H3>
+            <Br>
+            <label for = 'sbj1'>
+                <input type = "checkbox" value = "Math" name = "subjects" id = "sbj1">Math
+            </label>
+
+            <label for = 'sbj2'>
+                <input type = "checkbox" value = "Phy" name = "subjects" id = "sbj2">Phy
+            </label>
+
+            <label for = 'sbj3'>
+                <input type = "checkbox" value = "Chem" name = "subjects" id = "sbj3">Chem
+            </label>
+
+            <label for = 'sbj4'>
+                <input type = "checkbox" value = "Bio" name = "subjects" id = "sbj4">Bio
+            </label>
+
+            <label for = 'sbj5'>
+                <input type = "checkbox" value = "Eng" name = "subjects" id = "sbj5">Eng
+            </label>
+
+            <Hr>
+            <H4>City</H4>
+            <select name = "city">
+                <option value = "Delhi">Delhi</option>
+                <option value = "Mumbai">Mumbai</option>
+                <option value = "Bangalore">Bangalore</option>
+            </select>
+
+            <Hr>
+            <H3>Feedback</H3>
+            <textarea name = "feedback" id = "101" placeholder="Your feedback here" rows = 5>
+            </textarea>
+            <br>
+
+            <input type = "submit" value = "submit">
+            </form>
+</body>
+</html>
